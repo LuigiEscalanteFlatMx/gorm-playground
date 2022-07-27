@@ -1,0 +1,13 @@
+version: "3"
+services:
+  db:
+    image: postgres:9.6.19
+    container_name: db.postgresql.gorm-playground
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin123
+      - POSTGRES_DB=gorm_playground
+    volumes:
+      - ./db/postgres-data:/var/lib/postgresql/data
