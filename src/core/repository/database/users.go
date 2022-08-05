@@ -13,8 +13,25 @@ func (repo repositoryUsers) GetUsers(page int, totalRecords int) (map[string]int
 	var rows []interface{}
 	db := database.Engine()
 	result := make(map[string]interface{})
+	offset := GetOffset(page, totalRecords)
 	db.Model(&domain.Users{}).Count(&totalRows)
-	rowsData, _ := db.Model(&domain.Users{}).Limit(totalRecords).Offset(GetOffset(page, totalRecords)).Order("id desc").Rows()
+	/*Query from Model*/
+	rowsData, _ := db.Debug().Model(&domain.Users{}).Limit(totalRecords).Offset(offset).Order("id desc").Rows()
+	/*Query Builder from methods */
+	/*querySemiManual := db.Debug().Select("*").Table("users")
+	if offset <= 0 {
+		querySemiManual.Where("users.deleted_at IS NULL ORDER BY id desc LIMIT ?", totalRecords)
+	} else {
+		querySemiManual.Where("users.deleted_at IS NULL ORDER BY id desc LIMIT ? OFFSET ?", totalRecords, offset)
+	}
+	rowsData, _ := querySemiManual.Rows()*/
+	/*Query direct*/
+	/*var rowsData *sql.Rows
+	if offset <= 0 {
+		rowsData, _ = db.Debug().Raw("SELECT * FROM users WHERE users.deleted_at IS NULL ORDER BY id desc LIMIT ?", totalRecords).Rows()
+	} else {
+		rowsData, _ = db.Debug().Raw("SELECT * FROM users WHERE users.deleted_at IS NULL ORDER BY id desc LIMIT ? OFFSET ?", totalRecords, offset).Rows()
+	}*/
 	for rowsData.Next() {
 		user := domain.Users{}
 		db.ScanRows(rowsData, &user)
