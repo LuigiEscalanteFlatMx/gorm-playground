@@ -44,7 +44,10 @@ func (repo repositoryUsers) GetUsers(page int, totalRecords int) (map[string]int
 
 func (repo repositoryUsers) GetById(id int) (*domain.Users, error) {
 	var user *domain.Users
-	tx := database.Engine().Where("id=?", id).First(&user)
+	db := database.Engine()
+	tx := db.Where("id=?", id).First(&user)
+	//Users with join
+	//tx := db.Debug().Joins("inner join roles on roles.user_id=users.id").Where("users.id=?", id).First(&user)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
