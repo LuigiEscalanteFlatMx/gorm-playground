@@ -30,3 +30,19 @@ func InitDB() {
 func Engine() *gorm.DB {
 	return db
 }
+
+/*Test other rdms*/
+/*func InitDB() {
+	dbConn, err := gorm.Open(mysql.New(mysql.Config{
+		DSN:                       "root:root@tcp(127.0.0.1:3306)/gorm_playground?charset=utf8&parseTime=True&loc=Local", // data source name
+		DefaultStringSize:         256,
+		DisableDatetimePrecision:  true,
+		DontSupportRenameIndex:    true,
+		DontSupportRenameColumn:   true,
+		SkipInitializeWithVersion: false,
+	}), &gorm.Config{})
+	if err != nil {
+		log.Print(err)
+	}
+	db = dbConn
+}*/
